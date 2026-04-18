@@ -1,0 +1,82 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background gradient: deep navy → royal blue -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#0B1F3A"/>
+      <stop offset="100%" stop-color="#0055A5"/>
+    </linearGradient>
+
+    <!-- Building gradient: pure white top → light blue-white bottom -->
+    <linearGradient id="bldGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D6E8FF"/>
+    </linearGradient>
+
+    <!-- Glow filter for beacon -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Window color -->
+    <linearGradient id="winGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#003580"/>
+      <stop offset="100%" stop-color="#001A50"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Background rounded square ── -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGrad)"/>
+
+  <!-- Subtle ground glow -->
+  <ellipse cx="50" cy="93" rx="32" ry="7" fill="#0070CC" opacity="0.22"/>
+
+  <!-- ── Smart WiFi arcs (above building peak) ── -->
+  <!-- Large arc (faintest) -->
+  <path d="M26 17 Q50 1 74 17"
+        stroke="#FFC72C" stroke-width="2.2" fill="none"
+        stroke-linecap="round" opacity="0.35"/>
+  <!-- Medium arc -->
+  <path d="M32 14 Q50 2 68 14"
+        stroke="#FFC72C" stroke-width="2.8" fill="none"
+        stroke-linecap="round" opacity="0.60"/>
+  <!-- Small arc (sharpest) -->
+  <path d="M38 20 Q50 12 62 20"
+        stroke="#FFC72C" stroke-width="3.2" fill="none"
+        stroke-linecap="round" opacity="0.90"/>
+
+  <!-- Beacon dot at roof peak -->
+  <circle cx="50" cy="26" r="4.5" fill="#FFC72C" filter="url(#glow)"/>
+  <circle cx="50" cy="26" r="2"   fill="#FFFFFF"/>
+
+  <!-- ── Hotel roof (triangle) ── -->
+  <path d="M14 49 L50 26 L86 49 Z" fill="url(#bldGrad)"/>
+
+  <!-- ── Hotel building body ── -->
+  <rect x="18" y="47" width="64" height="50" rx="3" fill="url(#bldGrad)"/>
+
+  <!-- ── Windows — row 1 ── -->
+  <rect x="23"  y="54" width="14" height="11" rx="2" fill="url(#winGrad)" opacity="0.70"/>
+  <rect x="43"  y="54" width="14" height="11" rx="2" fill="url(#winGrad)" opacity="0.70"/>
+  <rect x="63"  y="54" width="14" height="11" rx="2" fill="url(#winGrad)" opacity="0.70"/>
+
+  <!-- Window shine (top highlight) -->
+  <rect x="23"  y="54" width="14" height="3"  rx="1" fill="#FFFFFF" opacity="0.25"/>
+  <rect x="43"  y="54" width="14" height="3"  rx="1" fill="#FFFFFF" opacity="0.25"/>
+  <rect x="63"  y="54" width="14" height="3"  rx="1" fill="#FFFFFF" opacity="0.25"/>
+
+  <!-- ── Windows — row 2 (side only, door in center) ── -->
+  <rect x="23"  y="70" width="14" height="11" rx="2" fill="url(#winGrad)" opacity="0.70"/>
+  <rect x="63"  y="70" width="14" height="11" rx="2" fill="url(#winGrad)" opacity="0.70"/>
+  <rect x="23"  y="70" width="14" height="3"  rx="1" fill="#FFFFFF" opacity="0.20"/>
+  <rect x="63"  y="70" width="14" height="3"  rx="1" fill="#FFFFFF" opacity="0.20"/>
+
+  <!-- ── Door (center) ── -->
+  <rect x="43" y="68" width="14" height="29" rx="2.5" fill="url(#winGrad)" opacity="0.75"/>
+  <!-- Door knob -->
+  <circle cx="54" cy="83" r="1.5" fill="#FFC72C" opacity="0.9"/>
+
+  <!-- ── Subtle building edge highlight ── -->
+  <rect x="18" y="47" width="64" height="50" rx="3"
+        fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.18"/>
+</svg>

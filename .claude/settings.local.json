@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pdftotext \"C:\\\\Users\\\\SASYA REDDY\\\\Downloads\\\\272- Project Plan \\(1\\).pdf\" -)",
+      "Bash(extract-text \"C:\\\\Users\\\\SASYA REDDY\\\\Downloads\\\\SmartHotel_Complete_Guide \\(1\\).docx\")",
+      "Bash(python \"C:\\\\Users\\\\SASYA REDDY\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\0a79e791-1612-4c62-b764-5f2efccc0edb\\\\66d069d7-ff3d-4b1c-bb0e-95d1570f8dc9\\\\skills\\\\docx\\\\scripts\\\\office\\\\unpack.py\" \"C:\\\\Users\\\\SASYA REDDY\\\\Downloads\\\\SmartHotel_Complete_Guide \\(1\\).docx\" \"/tmp/unpacked_hotel/\")",
+      "Bash(pip install:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python -c ':*)",
+      "Bash(npm --version)",
+      "Bash(npx create-react-app:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(grep -v \"^$\")"
+    ]
+  }
+}

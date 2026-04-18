@@ -1,0 +1,108 @@
+.room-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #EBEBEB;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+  cursor: default;
+}
+
+.room-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.14);
+}
+
+/* Image area */
+.room-card-img {
+  position: relative;
+  height: 92px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.room-card-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.25));
+}
+
+/* Pulse ring for active rooms */
+.room-pulse-ring {
+  position: absolute; inset: 0;
+  border: 2px solid;
+  border-radius: 14px;
+  animation: ring-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes ring-pulse {
+  0%,100% { opacity:0.6; }
+  50%      { opacity:0.15; }
+}
+
+/* Status badge */
+.room-status-badge {
+  position: absolute; bottom: 8px; left: 8px;
+  color: #fff; font-size: 0.62rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 5px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.badge-pulse { animation: badge-breathe 2s ease-in-out infinite; }
+
+@keyframes badge-breathe {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.7; }
+}
+
+/* Floor chip */
+.room-floor-chip {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(6px);
+  color: #fff; font-size: 0.62rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.25);
+  z-index: 3;
+}
+
+/* Card body */
+.room-card-body {
+  padding: 11px 12px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+
+.room-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.room-number {
+  font-size: 0.9rem; font-weight: 800; color: #1A1A1A;
+}
+
+.room-type-tag {
+  font-size: 0.68rem; color: #A0A0A0;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.room-amenities {
+  display: flex; align-items: center; gap: 4px;
+  color: #A0A0A0; font-size: 0.68rem; margin-top: 2px;
+}
+
+.room-price {
+  margin-top: 6px; padding-top: 8px;
+  border-top: 1px solid #F0F0F0;
+}
+
+.price-amount {
+  font-size: 1.05rem; font-weight: 900; color: #0070CC;
+}
+
+.price-night {
+  font-size: 0.68rem; color: #A0A0A0; font-weight: 500;
+}

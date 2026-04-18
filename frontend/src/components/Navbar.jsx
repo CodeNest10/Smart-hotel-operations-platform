@@ -1,27 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Grid3X3, CalendarDays,
-  Sparkles, BellRing, Search, X, User, Wifi, WifiOff,
+  Sparkles, BellRing, Search, X, Wifi, WifiOff,
+  LogOut, ShieldCheck,
 } from 'lucide-react';
 import { useHotel } from '../context/HotelContext';
+import { useAuth, ROLES } from '../context/AuthContext';
 import Logo from './Logo';
 import './Navbar.css';
 
-const links = [
-  { to: '/',             label: 'Dashboard',    Icon: LayoutDashboard },
-  { to: '/rooms',        label: 'Rooms',        Icon: Grid3X3 },
-  { to: '/reservations', label: 'Reservations', Icon: CalendarDays },
-  { to: '/housekeeping', label: 'Housekeeping', Icon: Sparkles },
-  { to: '/requests',     label: 'Requests',     Icon: BellRing },
+const ALL_LINKS = [
+  { to: '/',             label: 'Dashboard',    Icon: LayoutDashboard, roles: [ROLES.MANAGER, ROLES.FRONT_DESK, ROLES.HOUSEKEEPING] },
+  { to: '/rooms',        label: 'Rooms',        Icon: Grid3X3,         roles: [ROLES.MANAGER, ROLES.FRONT_DESK, ROLES.HOUSEKEEPING] },
+  { to: '/reservations', label: 'Reservations', Icon: CalendarDays,    roles: [ROLES.MANAGER, ROLES.FRONT_DESK] },
+  { to: '/housekeeping', label: 'Housekeeping', Icon: Sparkles,        roles: [ROLES.MANAGER, ROLES.HOUSEKEEPING] },
+  { to: '/requests',     label: 'Requests',     Icon: BellRing,        roles: [ROLES.MANAGER, ROLES.FRONT_DESK, ROLES.HOUSEKEEPING] },
 ];
+
+const ROLE_LABELS = {
+  MANAGER:      'Manager',
+  FRONT_DESK:   'Front Desk',
+  HOUSEKEEPING: 'Housekeeping',
+};
 
 function Navbar() {
   const { occupancy } = useHotel();
+  const { user, logout, hasRole, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVal, setSearchVal]   = useState('');
   const [scrolled, setScrolled]     = useState(false);
   const [notifOpen, setNotifOpen]   = useState(false);
+  const [userOpen, setUserOpen]     = useState(false);
+
+  const userRef = useRef(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8);
@@ -29,21 +43,46 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
+  useEffect(() => {
+    if (!userOpen) return;
+    const onClick = (e) => {
+      if (userRef.current && !userRef.current.contains(e.target)) setUserOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [userOpen]);
+
+  // Don't show navbar on login screen.
+  if (!isAuthenticated) return null;
+
   const isAlert = occupancy?.alert;
   const pct     = Math.round(occupancy?.occupancy_pct || 0);
+
+  const visibleLinks = ALL_LINKS.filter((l) => hasRole(l.roles));
+
+  const initials = (user?.name || user?.email || '?')
+    .split(/\s|@/)[0]
+    .slice(0, 2)
+    .toUpperCase();
+
+  const handleLogout = () => {
+    setUserOpen(false);
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-inner">
 
-        {/* Brand — uses the Logo component */}
+        {/* Brand */}
         <NavLink to="/" className="navbar-brand" style={{ textDecoration: 'none' }}>
           <Logo size={38} showText={true} variant="default" />
         </NavLink>
 
-        {/* Nav links */}
+        {/* Nav links (filtered by role) */}
         <ul className="navbar-links">
-          {links.map(({ to, label, Icon }) => (
+          {visibleLinks.map(({ to, label, Icon }) => (
             <li key={to}>
               <NavLink
                 to={to}
@@ -125,10 +164,35 @@ function Navbar() {
             )}
           </div>
 
-          {/* Avatar */}
-          <button className="navbar-avatar" title="Staff account">
-            <User size={15} />
-          </button>
+          {/* User avatar + dropdown */}
+          <div className="user-wrap" ref={userRef}>
+            <button
+              className="navbar-avatar"
+              title={user?.name || 'Account'}
+              onClick={() => setUserOpen((v) => !v)}
+            >
+              {initials}
+            </button>
+            {userOpen && (
+              <div className="user-dropdown">
+                <div className="user-dropdown-head">
+                  <div className="user-dd-avatar">{initials}</div>
+                  <div className="user-dd-meta">
+                    <div className="user-dd-name">{user?.name || 'Staff'}</div>
+                    <div className="user-dd-email">{user?.email}</div>
+                  </div>
+                </div>
+                <div className="user-dd-role">
+                  <ShieldCheck size={13} />
+                  <span>{ROLE_LABELS[user?.role] || user?.role}</span>
+                </div>
+                <button className="user-dd-item danger" onClick={handleLogout}>
+                  <LogOut size={14} />
+                  <span>Sign out</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

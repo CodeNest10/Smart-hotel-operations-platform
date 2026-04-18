@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid3X3, SlidersHorizontal } from 'lucide-react';
+import { Grid3X3, SlidersHorizontal, Radio, WifiOff } from 'lucide-react';
 import useRooms from '../hooks/useRooms';
 import RoomCard from '../components/RoomCard';
 import { SkeletonCard } from '../components/Skeleton';
@@ -15,7 +15,7 @@ const STATUS_ICONS = {
 };
 
 function RoomGrid() {
-  const { rooms, loading } = useRooms(5000);
+  const { rooms, loading, streaming, lastUpdatedId } = useRooms();
   const [filter, setFilter] = useState('ALL');
 
   const filtered = filter === 'ALL' ? rooms : rooms.filter(r => r.status === filter);
@@ -27,7 +27,11 @@ function RoomGrid() {
         <div className="page-hero-inner">
           <div className="page-hero-eyebrow"><Grid3X3 size={12} /> Room Management</div>
           <h1>Room Grid</h1>
-          <p>Live status map — refreshes every 5 seconds</p>
+          <p>
+            {streaming
+              ? 'Live stream — rooms update the instant their status changes.'
+              : 'Reconnecting to live stream… falling back to periodic refresh.'}
+          </p>
         </div>
       </div>
 
@@ -55,6 +59,10 @@ function RoomGrid() {
             </div>
           </div>
           <div className="toolbar-right">
+            <div className={`stream-chip ${streaming ? 'live' : 'offline'}`}>
+              {streaming ? <Radio size={12} /> : <WifiOff size={12} />}
+              <span>{streaming ? 'Live' : 'Polling'}</span>
+            </div>
             <div className="legend">
               {Object.entries(STATUS_COLORS).map(([s,c]) => (
                 <span key={s} className="legend-item">
@@ -76,11 +84,18 @@ function RoomGrid() {
           <EmptyState icon="🚪" message="No rooms match this filter." />
         ) : (
           <div className="room-grid">
-            {filtered.map((room, i) => (
-              <div key={room.id} className="fade-up" style={{ animationDelay: `${i * 40}ms` }}>
-                <RoomCard room={room} />
-              </div>
-            ))}
+            {filtered.map((room, i) => {
+              const justUpdated = room.id === lastUpdatedId;
+              return (
+                <div
+                  key={room.id}
+                  className={`fade-up ${justUpdated ? 'room-flash' : ''}`}
+                  style={{ animationDelay: justUpdated ? '0ms' : `${i * 40}ms` }}
+                >
+                  <RoomCard room={room} />
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
